@@ -1,9 +1,11 @@
+from typing import List, Any, Tuple
+
 from constraint import Problem, AllDifferentConstraint, InSetConstraint
 import re
 
 
-def addRoute(array):
-    problem.addConstraint((AllDifferentConstraint(), [array]))
+def addRoute(problem, array):
+    problem.addConstraint((AllDifferentConstraint(), array))
 
 
 size = int(input('podaj wielkosc lamiglowki: '))
@@ -15,24 +17,28 @@ for r in res:
         print(c, end=" ")
     print()
 
-
-for j in range(size):
-    array = []
-    route = input('podaj sciezke: \n')
-    x = re.findall("[0-9]+", route)
-    for i in x:
-        array.append((i, i + 1))
-        i = +2
-    addRoute(array)
-
-
-res = [list(row.strip()) for row in res.splitlines() if row.strip()]
 S = len(res)
 cellnames = [(i, j) for j, row in enumerate(res) for i, val in enumerate(row)]
 lookup = {(i, j): res[i][j] for i, j in cellnames}
-
 problem = Problem()
-problem.addVariables(cellnames, [str(j) for j in range(1, 5)])
+problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
+
+for j in range(size):
+    array: List[Tuple[Any, Any]] = []
+    x = []
+    route = input('podaj sciezke [rzad, kolumna]: \n')
+    x = re.findall("[0-9]+", route)
+    print(x)
+    for i in range(size):
+        array.append((x[i], x[i + 1]))
+        print(array)
+        i = +2
+    problem.addConstraint((AllDifferentConstraint(), array))
+
+for i in range(size - 1):
+    values = input('uzupelnij wybrane miejsce: \n')
+    x = re.findall("[0-9]+", values)
+    res[x[0], x[1]] = x[2]
 
 # streams in grid
 # [row,column]
