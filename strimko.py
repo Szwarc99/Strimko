@@ -3,11 +3,6 @@ from typing import List, Any, Tuple
 from constraint import Problem, AllDifferentConstraint, InSetConstraint
 import re
 
-
-def addRoute(problem, array):
-    problem.addConstraint((AllDifferentConstraint(), array))
-
-
 size = int(input('podaj wielkosc lamiglowki: '))
 
 res = [["." for i in range(size)] for j in range(size)]
@@ -18,10 +13,7 @@ for r in res:
     print()
 
 S = len(res)
-cellnames = [(i, j) for j, row in enumerate(res) for i, val in enumerate(row)]
-lookup = {(i, j): res[i][j] for i, j in cellnames}
 problem = Problem()
-problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
 
 for j in range(size):
     array: List[Tuple[Any, Any]] = []
@@ -29,16 +21,20 @@ for j in range(size):
     route = input('podaj sciezke [rzad, kolumna]: \n')
     x = re.findall("[0-9]+", route)
     print(x)
-    for i in range(size):
-        array.append((x[i], x[i + 1]))
+    for i in range(0, len(x), 2):
+        print(i)
+        array.append((int(x[i]), int(x[i + 1])))
         print(array)
-        i = +2
-    problem.addConstraint((AllDifferentConstraint(), array))
+    problem.addConstraint(AllDifferentConstraint(), array)
 
 for i in range(size - 1):
     values = input('uzupelnij wybrane miejsce: \n')
     x = re.findall("[0-9]+", values)
-    res[x[0], x[1]] = x[2]
+    res[int(x[0])][int(x[1])] = x[2]
+
+cellnames = [(i, j) for j, row in enumerate(res) for i, val in enumerate(row)]
+lookup = {(i, j): res[i][j] for i, j in cellnames}
+problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
 
 # streams in grid
 # [row,column]
@@ -47,7 +43,7 @@ for i in range(size - 1):
 # problem.addConstraint(AllDifferentConstraint(), [(2, 0), (3, 1), (3, 2), (2, 3)])
 # problem.addConstraint(AllDifferentConstraint(), [(3, 0), (2, 1), (1, 2), (0, 3)])
 
-for j in range(4):
+for j in range(size):
     # Columns in grid
     problem.addConstraint(AllDifferentConstraint(), [(i, j) for i in range(4)])
     # Rows in grid
@@ -56,8 +52,9 @@ for j in range(4):
 for cell, value in lookup.items():
     if value != ".":
         problem.addConstraint(InSetConstraint([str(value)]), [cell])
-print("\n".join(" ".join(lookup[(i, j)] for j in range(4)) for i in range(4)))
+        print("check")
+print("\n".join(" ".join(lookup[(i, j)] for j in range(size)) for i in range(4)))
 
 for solution in problem.getSolutions():
-    print("\n".join(" ".join(solution[(i, j)] for j in range(4)) for i in range(4)))
+    print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(4)))
     print()
