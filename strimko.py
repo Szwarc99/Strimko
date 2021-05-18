@@ -45,16 +45,16 @@ problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
 
 for j in range(size):
     # Columns in grid
-    problem.addConstraint(AllDifferentConstraint(), [(i, j) for i in range(4)])
+    problem.addConstraint(AllDifferentConstraint(), [(i, j) for i in range(size)])
     # Rows in grid
-    problem.addConstraint(AllDifferentConstraint(), [(j, i) for i in range(4)])
+    problem.addConstraint(AllDifferentConstraint(), [(j, i) for i in range(size)])
 
 for cell, value in lookup.items():
     if value != ".":
         problem.addConstraint(InSetConstraint([str(value)]), [cell])
         print("check")
-print("\n".join(" ".join(lookup[(i, j)] for j in range(size)) for i in range(4)))
+print("\n".join(" ".join(lookup[(i, j)] for j in range(size)) for i in range(size)))
 
 for solution in problem.getSolutions():
-    print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(4)))
+    print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(size)))
     print()
