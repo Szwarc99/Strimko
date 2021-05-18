@@ -18,7 +18,7 @@ problem = Problem()
 for j in range(size):
     array: List[Tuple[Any, Any]] = []
     x = []
-    route = input('podaj sciezke [rzad, kolumna]: \n')
+    route = input('podaj sciezke nr ' + str(j) + ' [rzad, kolumna]: \n')
     x = re.findall("[0-9]+", route)
     print(x)
     for i in range(0, len(x), 2):
