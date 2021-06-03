@@ -197,12 +197,15 @@ while True:
             # print(y, pos[0])  # oś y
 
             if route_counter < size:
+                if tile_counter == size:
+                    routes.append(route)
+                    print('rc', route_counter)
+                    route_counter += 1
+                    route = []
+                    tile_counter = 0
                 if y < size:
-                    if tile_counter == size:
-                        route_counter += 1
-                        routes.append(route)
-                        route = []
-                        tile_counter = 0
+                    # if tile_counter == size:
+
                     if x <= WINDOW_WIDTH and y <= WINDOW_HEIGHT and route_counter < size:
                         # print(tile_counter)
                         fields[x][y].color = colorDict[route_counter]
@@ -210,7 +213,8 @@ while True:
                         route.append((x, y))
                         # print(route, route_counter)
                         tile_counter += 1
-
+                    print(tile_counter, size)
+            # reset
             if pos[0] >= WINDOW_WIDTH + gap and pos[1] >= WINDOW_HEIGHT - buttonSize:
                 resetGrid()
                 route_counter = 0
@@ -218,9 +222,11 @@ while True:
                 routes = []
                 values = []
                 val = 0
-
+            # check
             if pos[0] >= WINDOW_WIDTH + gap and pos[1] <= buttonSize:
                 print('solving')
+                for r in routes:
+                    print(r)
                 solveStrimko(routes, values)
 
         if event.type == pygame.KEYDOWN:
