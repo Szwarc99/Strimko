@@ -15,6 +15,7 @@ YELLOW = (255, 255, 0)
 TURQUOISE = (64, 224, 208)
 HOTPINK = (255, 105, 180)
 LAWNGREEN = (124, 252, 0)
+ORANGE_RED = (255, 69, 0)
 
 colorDict = {
     0: CRIMSON,
@@ -22,7 +23,8 @@ colorDict = {
     2: YELLOW,
     3: TURQUOISE,
     4: HOTPINK,
-    5: LAWNGREEN
+    5: LAWNGREEN,
+    6: ORANGE_RED
 }
 
 WINDOW_HEIGHT = 400
@@ -81,7 +83,7 @@ def drawMenu():
 
 blockSize = int(WINDOW_WIDTH / size)  # Set the size of the grid block
 
-numberFont = pygame.font.SysFont('Corbel', blockSize-20)
+numberFont = pygame.font.SysFont('Corbel', blockSize - 20)
 
 fields = [[0 for x in range(size)] for y in range(size)]
 
@@ -156,7 +158,6 @@ def solveStrimko(routes, values):
         # Rows in grid
         problem.addConstraint(AllDifferentConstraint(), [(j, i) for i in range(size)])
 
-
     for cell, value in lookup.items():
         if value != ".":
             problem.addConstraint(InSetConstraint([str(value)]), [cell])
@@ -170,7 +171,6 @@ def solveStrimko(routes, values):
 
         # print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(size)))
         # print()
-
 
 
 route_counter = 0
@@ -233,7 +233,7 @@ while True:
             # print('x', x, 'y', y)
             # print('n', event.key)
             # if event.key == pygame.K_1:
-            if 49 <= event.key <= 54:
+            if 49 <= event.key <= 55:
                 val = event.key - 48
             if val != 0:
                 fields[x][y].value = val
@@ -241,10 +241,6 @@ while True:
 
         # print('x', x, 'y', y)
         pygame.display.update()
-
-
-
-
 
 res = [["." for i in range(size)] for j in range(size)]
 
