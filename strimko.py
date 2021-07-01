@@ -1,9 +1,5 @@
 import pygame
-import re
 import sys
-from typing import List, Any, Tuple
-
-import sprites as sprites
 from constraint import Problem, AllDifferentConstraint, InSetConstraint
 
 BLACK = (0, 0, 0)
@@ -99,21 +95,7 @@ print(fields[0][1].rectangle)
 print(fields[0][2].rectangle)
 print(fields[0][3].rectangle)
 
-
-# for x in range(0, WINDOW_WIDTH, blockSize):
-#     print('X ' + str(x))
-#     for y in range(0, WINDOW_HEIGHT, blockSize):
-#         rect = pygame.Rect(x, y, blockSize, blockSize)
-#         print('Y ' + str(y))
-#         fields[int(x/blockSize)][int(y/blockSize)] = Square(rect)
-#         print(fields[int(x/blockSize)][int(y/blockSize)].rectangle)
-
-
 def drawGrid():
-    # for x in range(0, WINDOW_WIDTH, blockSize):
-    #     for y in range(0, WINDOW_HEIGHT, blockSize):
-    #         rect = pygame.Rect(x, y, blockSize, blockSize)
-    #         pygame.draw.rect(SCREEN, WHITE, rect, 1)
     for x in range(0, size):
         for y in range(0, size):
             pygame.draw.rect(SCREEN, fields[x][y].color, fields[x][y].rectangle)
@@ -168,9 +150,6 @@ def solveStrimko(routes, values):
         for i in range(0, size):
             for j in range(0, size):
                 fields[i][j].value = solution[(i, j)]
-
-        # print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(size)))
-        # print()
 
 
 route_counter = 0
@@ -230,68 +209,65 @@ while True:
                 solveStrimko(routes, values)
 
         if event.type == pygame.KEYDOWN:
-            # print('x', x, 'y', y)
-            # print('n', event.key)
-            # if event.key == pygame.K_1:
             if 49 <= event.key <= 55:
                 val = event.key - 48
             if val != 0:
                 fields[x][y].value = val
                 values.append((x, y, val))
 
-        # print('x', x, 'y', y)
+
         pygame.display.update()
 
-res = [["." for i in range(size)] for j in range(size)]
-
-for r in res:
-    for c in r:
-        print(c, end=" ")
-    print()
-
-S = len(res)
-problem = Problem()
-
-for j in range(size):
-    array: List[Tuple[Any, Any]] = []
-    x = []
-    route = input('podaj sciezke nr ' + str(j) + ' [rzad, kolumna]: \n')
-    x = re.findall("[0-9]+", route)
-    print(x)
-    for i in range(0, len(x), 2):
-        print(i)
-        array.append((int(x[i]), int(x[i + 1])))
-        print(array)
-    problem.addConstraint(AllDifferentConstraint(), array)
-
-for i in range(size - 1):
-    values = input('uzupelnij wybrane miejsce: \n')
-    x = re.findall("[0-9]+", values)
-    res[int(x[0])][int(x[1])] = x[2]
-
-cellnames = [(i, j) for j, row in enumerate(res) for i, val in enumerate(row)]
-lookup = {(i, j): res[i][j] for i, j in cellnames}
-problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
-
-# streams in grid
-# [row,column]
-# problem.addConstraint(AllDifferentConstraint(), [(0, 0), (1, 1), (2, 2), (3, 3)])
-# problem.addConstraint(AllDifferentConstraint(), [(1, 0), (0, 1), (0, 2), (1, 3)])
-# problem.addConstraint(AllDifferentConstraint(), [(2, 0), (3, 1), (3, 2), (2, 3)])
-# problem.addConstraint(AllDifferentConstraint(), [(3, 0), (2, 1), (1, 2), (0, 3)])
-
-for j in range(size):
-    # Columns in grid
-    problem.addConstraint(AllDifferentConstraint(), [(i, j) for i in range(size)])
-    # Rows in grid
-    problem.addConstraint(AllDifferentConstraint(), [(j, i) for i in range(size)])
-
-for cell, value in lookup.items():
-    if value != ".":
-        problem.addConstraint(InSetConstraint([str(value)]), [cell])
-        print("check")
-print("\n".join(" ".join(lookup[(i, j)] for j in range(size)) for i in range(size)))
-
-for solution in problem.getSolutions():
-    print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(size)))
-    print()
+# res = [["." for i in range(size)] for j in range(size)]
+#
+# for r in res:
+#     for c in r:
+#         print(c, end=" ")
+#     print()
+#
+# S = len(res)
+# problem = Problem()
+#
+# for j in range(size):
+#     array: List[Tuple[Any, Any]] = []
+#     x = []
+#     route = input('podaj sciezke nr ' + str(j) + ' [rzad, kolumna]: \n')
+#     x = re.findall("[0-9]+", route)
+#     print(x)
+#     for i in range(0, len(x), 2):
+#         print(i)
+#         array.append((int(x[i]), int(x[i + 1])))
+#         print(array)
+#     problem.addConstraint(AllDifferentConstraint(), array)
+#
+# for i in range(size - 1):
+#     values = input('uzupelnij wybrane miejsce: \n')
+#     x = re.findall("[0-9]+", values)
+#     res[int(x[0])][int(x[1])] = x[2]
+#
+# cellnames = [(i, j) for j, row in enumerate(res) for i, val in enumerate(row)]
+# lookup = {(i, j): res[i][j] for i, j in cellnames}
+# problem.addVariables(cellnames, [str(j) for j in range(1, size + 1)])
+#
+# # streams in grid
+# # [row,column]
+# # problem.addConstraint(AllDifferentConstraint(), [(0, 0), (1, 1), (2, 2), (3, 3)])
+# # problem.addConstraint(AllDifferentConstraint(), [(1, 0), (0, 1), (0, 2), (1, 3)])
+# # problem.addConstraint(AllDifferentConstraint(), [(2, 0), (3, 1), (3, 2), (2, 3)])
+# # problem.addConstraint(AllDifferentConstraint(), [(3, 0), (2, 1), (1, 2), (0, 3)])
+#
+# for j in range(size):
+#     # Columns in grid
+#     problem.addConstraint(AllDifferentConstraint(), [(i, j) for i in range(size)])
+#     # Rows in grid
+#     problem.addConstraint(AllDifferentConstraint(), [(j, i) for i in range(size)])
+#
+# for cell, value in lookup.items():
+#     if value != ".":
+#         problem.addConstraint(InSetConstraint([str(value)]), [cell])
+#         print("check")
+# print("\n".join(" ".join(lookup[(i, j)] for j in range(size)) for i in range(size)))
+#
+# for solution in problem.getSolutions():
+#     print("\n".join(" ".join(solution[(i, j)] for j in range(size)) for i in range(size)))
+#     print()
